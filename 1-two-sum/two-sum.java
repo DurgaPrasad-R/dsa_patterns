@@ -1,52 +1,35 @@
 /**
- * To apply the two-pointer approach, the array must be sorted.
- * Since sorting changes the original indices, we store each number
- * along with its original index.
+ * This approach uses a HashMap to solve the Two Sum problem in a single pass.
  *
- * We use a 2D array where:
- * - The first element of each row represents the value
- * - The second element represents the original index
+ * As we iterate through the array, we calculate the complement
+ * (target − current number) for each element.
  *
- * After sorting this array by value, we apply the two-pointer technique
- * and return the stored original indices when the target sum is found.
+ * If the complement already exists in the map, it means we have found
+ * two numbers whose sum equals the target, so we return their indices.
+ *
+ * Otherwise, we store the current number along with its index in the map
+ * for future lookups.
+ *
  * Time Complexity:
- * - O(n log n) due to sorting the array
- * - O(n) for the two-pointer traversal
- * - Overall: O(n log n)
+ * - O(n), since each element is processed once and HashMap operations
+ *   (insert and lookup) take constant time on average.
  *
  * Space Complexity:
- * - O(n) for the additional 2D array storing values and indices
+ * - O(n), due to the extra space used by the HashMap to store values
+ *   and their corresponding indices.
  */
 class Solution {
     public int[] twoSum(int[] nums, int target) {
         int n = nums.length;
+        Map<Integer, Integer> valueIndexPairs = new HashMap<>();
 
-        int[][] sortedNums = new int[n][2];
         for(int i = 0;i<n;i++) {
-            sortedNums[i][0] = nums[i];
-            sortedNums[i][1] = i;
-        }
-
-        Arrays.sort(sortedNums, (a,b)->(a[0]-b[0]));
-        
-        // initialize left and right pointers
-        int left = 0, right = n - 1;
-
-        while (left < right) {
-            if (sortedNums[left][0] + sortedNums[right][0] < target) {
-                left += 1;
-            }
-
-            else if (sortedNums[left][0] + sortedNums[right][0] == target) {
-                return new int[] {sortedNums[left][1], sortedNums[right][1]};
-            }
-
-            else {
-                right -= 1;
+            if (valueIndexPairs.containsKey(target - nums[i])) {
+                return new int[] {valueIndexPairs.get(target - nums[i]), i};
+            } else {
+                valueIndexPairs.put(nums[i], i);
             }
         }
-        
-
         return new int[] {-1,-1};
     }
 }
