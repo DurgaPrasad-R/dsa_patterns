@@ -9,6 +9,13 @@
  *
  * After sorting this array by value, we apply the two-pointer technique
  * and return the stored original indices when the target sum is found.
+ * Time Complexity:
+ * - O(n log n) due to sorting the array
+ * - O(n) for the two-pointer traversal
+ * - Overall: O(n log n)
+ *
+ * Space Complexity:
+ * - O(n) for the additional 2D array storing values and indices
  */
 class Solution {
     public int[] twoSum(int[] nums, int target) {
