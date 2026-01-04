@@ -1,33 +1,40 @@
 class Solution {
-    List<List<Integer>> result = new ArrayList<>();
-    Set<List<Integer>> found = new HashSet<>();
+    public void findTwoSum(int[] nums, int i, List<List<Integer>> result) {
+        int left = i+1, right = nums.length - 1;
 
-    public void findTwoSum(int[] nums, int target, int left, int right) {
         while (left < right) {
-            if (nums[left] + nums[right] == target) {
-                List<Integer> temp = Arrays.asList(-target, nums[left], nums[right]);
-                if (!found.contains(temp)) {
-                    result.add(temp);
-                    found.add(temp);
-                }
+            int sum = nums[i] + nums[left] + nums[right];
 
-                left += 1;
-            }
+            if (sum == 0) {
 
-            else if (nums[left] + nums[right] > target) {
-                right -= 1;
-            } else {
-                left += 1;
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+
+                left++;
+                right--;
+
+                while (left < right && nums[left] == nums[left - 1]) left++;
+                while (left < right && nums[right] == nums[right + 1]) right--;
+
+            } 
+
+            else if (sum < 0) {
+                left++;
+            } 
+
+            else {
+                right--;
             }
         }
     }
 
     public List<List<Integer>> threeSum(int[] nums) {
         int n = nums.length;
+        List<List<Integer>> result = new ArrayList<>();
         Arrays.sort(nums);
 
         for (int i = 0; i < n; i++) {
-            findTwoSum(nums, -nums[i], i+1, n-1);
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            findTwoSum(nums, i, result);
         }
 
         return result;
