@@ -1,64 +1,56 @@
 /**
- * Counting Approach:
+ * Dutch National Flag algorithm:
+ * Three pointers are used to partition the array into different regions:
+ * - `left` marks the boundary for placing 0s
+ * - `mid` is used to traverse the array
+ * - `right` marks the boundary for placing 2s
  *
- * Since the array contains only three distinct values (0, 1, and 2),
- * we first count the frequency of each value.
+ * The array is conceptually divided into four regions:
+ * - indices [0 ... left - 1] contain all 0s
+ * - indices [left ... mid - 1] contain all 1s
+ * - indices [mid ... right] are unexplored
+ * - indices [right + 1 ... n - 1] contain all 2s
  *
- * A count array of size 3 is used where:
- * - count[0] stores the number of 0s
- * - count[1] stores the number of 1s
- * - count[2] stores the number of 2s
+ * While traversing the array using the `mid` pointer:
+ * - If the current element is 1, it is already in the correct region,
+ *   so `mid` is incremented.
  *
- * In the first pass, we iterate through the input array and
- * populate the count array based on the value at each index.
+ * - If the current element is 0, it is swapped with the element at `left`,
+ *   expanding the 0s region. Both `left` and `mid` are incremented.
  *
- * In the second phase, we overwrite the original array:
- * - First, we fill in all the 0s
- * - Then, all the 1s
- * - Finally, all the 2s
+ * - If the current element is 2, it is swapped with the element at `right`,
+ *   expanding the 2s region. Only `right` is decremented because the
+ *   swapped element at `mid` needs to be re-evaluated.
  *
- * An index pointer is used to keep track of the position
- * where the next value should be placed.
+ * This process continues until all elements are processed.
  *
  * Time Complexity:
- * - O(n), as the array is traversed a constant number of times.
+ * - O(n), since each element is examined at most once.
  *
  * Space Complexity:
- * - O(1), since the count array has a fixed size of 3
- *   and does not grow with input size.
+ * - O(1), as the sorting is done in-place without extra memory.
  */
 
 class Solution {
     public void sortColors(int[] nums) {
-        int[] count = new int[3];
-        int n = nums.length, idx = 0;
+        int left = 0, right = nums.length - 1, mid = 0;
 
-        for (int i = 0; i < n; i++) {
-            if (nums[i] == 0) {
-                count[0] += 1;
-            } else if (nums[i] == 1) {
-                count[1] += 1;
+
+        while (mid <= right) {
+            if (nums[mid] == 1) {
+                mid += 1;
+            } else if (nums[mid] == 0) {
+                int temp = nums[mid];
+                nums[mid] = nums[left];
+                nums[left] = temp;
+                left += 1;
+                mid += 1;
             } else {
-                count[2] += 1;
+                int temp = nums[mid];
+                nums[mid] = nums[right];
+                nums[right] = temp;
+                right -= 1;
             }
-        }
-
-        while (count[0] > 0) {
-            nums[idx] = 0;
-            idx += 1;
-            count[0] -= 1;
-        }
-
-        while (count[1] > 0) {
-            nums[idx] = 1;
-            idx += 1;
-            count[1] -= 1;
-        }
-
-        while (count[2] > 0) {
-            nums[idx] = 2;
-            idx += 1;
-            count[2] -= 1;
         }
     }
 }
