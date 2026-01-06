@@ -47,11 +47,7 @@ class Solution {
         long hours = 0;
 
         for (int i = 0; i < n; i++) {
-            hours += piles[i] / target;
-
-            if (piles[i] % target > 0) {
-                hours += 1;
-            }
+            hours += (piles[i] + target - 1)/ target;
         }
         
         return hours;
