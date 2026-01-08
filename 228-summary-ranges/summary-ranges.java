@@ -1,33 +1,32 @@
-/* Two Pointer/ Sliding Window Style:
- * The algorithm maintains a `left` pointer that marks the start
- * of the current range. A `right` pointer moves forward to detect
- * whether the sequence remains consecutive.
+/**
+ * Single Pass, Index Controlled Solution:
+ * The algorithm iterates through the array using a loop index `i`.
+ * At each iteration, the current element is treated as the start
+ * of a potential range.
  *
- * The loop runs from index 1 up to and including `n` (one step beyond
- * the array), which allows the algorithm to flush the final range
- * without needing extra handling after the loop.
+ * A variable `s` stores the starting value of the current range.
+ * The algorithm then advances `i` forward as long as the next element
+ * is consecutive (i.e., nums[i + 1] == nums[i] + 1).
  *
- * A range is considered broken when either:
- * 1) `right` reaches the end of the array, or
- * 2) the current element is not consecutive
- *    (nums[right] != nums[right - 1] + 1).
+ * Once the consecutive sequence ends, there are two possible cases:
+ * 1) If the start value `s` is equal to the current value `nums[i]`,
+ *    the range contains only one number, and that number is added
+ *    directly to the result list.
+ * 2) Otherwise, a range string in the format "start->end" is added,
+ *    where `start` is `s` and `end` is `nums[i]`.
  *
- * When a break is detected:
- * - If `left == right - 1`, the range consists of a single number,
- *   and that number is added directly to the result.
- * - Otherwise, a range in the form "start->end" is added.
+ * The loop then continues from the next index after the processed range.
  *
- * After committing the range, the `left` pointer is moved to `right`
- * to begin tracking the next range.
- *
- * This approach ensures each element is visited exactly once.
+ * By incrementing the loop index inside the `while` loop, the algorithm
+ * ensures that each element is processed exactly once.
  *
  * Time Complexity:
- * - O(n), since the array is scanned in a single pass.
+ * - O(n), since each element is visited only once.
  *
  * Space Complexity:
  * - O(1) extra space (excluding the output list).
  */
+
 class Solution {
     public List<String> summaryRanges(int[] nums) {
         List<String> result = new ArrayList<>();
@@ -35,18 +34,19 @@ class Solution {
 
         if (n == 0) return result;
 
-        int left = 0;
-        for (int right = 1; right <= n; right++) {
-            if (right == n || nums[right] - 1 != nums[right - 1]) {
-                if (left == right - 1) {
-                    result.add(nums[left]+"");
-                } else {
-                    result.add(nums[left]+"->"+nums[right-1]);
-                }
-                left = right;
+        for (int i = 0; i < n; i++) {
+            int s = nums[i];
+
+            while (i + 1 < n && nums[i+1] - 1 == nums[i]) {
+                i++;
+            }
+
+            if (s == nums[i]) {
+                result.add(s+"");
+            } else {
+                result.add(s+"->"+nums[i]);
             }
         }
-
         return result;
     }
 }
