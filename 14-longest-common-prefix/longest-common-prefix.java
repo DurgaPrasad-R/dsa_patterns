@@ -1,55 +1,48 @@
 /**
- * The algorithm first sorts the array of strings based on their lengths
- * in ascending order. This ensures that the shortest string is processed first,
- * since the longest possible common prefix cannot exceed its length.
+ * This solution finds the longest common prefix among a set of strings
+ * by leveraging lexicographical sorting.
  *
- * The algorithm then iterates character by character over the shortest string.
- * For each character position `i`, it compares the character from the shortest
- * string with the character at the same position in all other strings.
+ * The algorithm first checks for the edge case where the input array
+ * is empty. If so, an empty string is returned immediately.
  *
- * If a mismatch is found at any position, the comparison stops immediately,
- * as no further characters can be part of the common prefix.
+ * The array of strings is then sorted lexicographically.
+ * After sorting, strings that share common prefixes will be positioned
+ * close to each other in the array.
  *
- * If all strings share the same character at a given position,
- * that character is appended to the result.
+ * To determine the longest common prefix for the entire array,
+ * it is sufficient to compare only the first and the last strings
+ * in the sorted order. Any prefix common to all strings must also
+ * be common to these two.
  *
- * This process continues until a mismatch occurs or the shortest
- * string is fully traversed.
+ * The algorithm iterates character by character, comparing the
+ * corresponding characters of the first and last strings until
+ * a mismatch is found or the end of one string is reached.
  *
- * The accumulated characters form the longest common prefix,
- * which is returned as the final result.
+ * The substring from the beginning up to the mismatch index
+ * represents the longest common prefix and is returned as the result.
  *
  * Time Complexity:
- * - O(n log n + m * n), where n is the number of strings and
- *   m is the length of the shortest string.
- *   (Sorting dominates for large n.)
+ * - O(n log n + m), where n is the number of strings and
+ *   m is the length of the longest common prefix.
  *
  * Space Complexity:
  * - O(1) extra space (excluding the output string),
- *   as no additional data structures proportional to input size are used.
+ *   as the sorting is performed in place.
  */
 
 class Solution {
     public String longestCommonPrefix(String[] strs) {
-        Arrays.sort(strs, (a,b) -> a.length() - b.length());
-        
-        int n = strs[0].length();
-        int strsLen = strs.length;
-        StringBuilder result = new StringBuilder();
+        if (strs.length == 0) return "";
 
-        for (int i = 0; i < n; i++) {
-            char ch = strs[0].charAt(i);
-            boolean flag = true;
-            for (int curr = 1; curr < strsLen; curr++) {
-                if (strs[curr].charAt(i) != ch) {
-                    flag = false;
-                    break;
-                }
-            }
-            if (!flag) break;
-            else result.append(ch);
+        Arrays.sort(strs);
+        String first = strs[0];
+        String last = strs[strs.length - 1];
+        int i = 0;
+
+        while (i < first.length() && i < last.length() && first.charAt(i) == last.charAt(i)) {
+            i++;
         }
 
-        return result.toString();
+        return first.substring(0, i);
     }
 }
