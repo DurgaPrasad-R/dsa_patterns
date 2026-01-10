@@ -1,46 +1,49 @@
 /**
- * Character Frequency Approach:
+ * This solution checks whether two strings are anagrams of each other
+ * by comparing the frequency of each character.
  *
- * The algorithm first validates that both strings have the same length,
- * since anagrams must contain the same number of characters.
+ * Since the strings consist only of lowercase English letters,
+ * a fixed-size integer array of length 26 is used to track
+ * character frequencies efficiently.
  *
- * It then iterates through the first string and builds a frequency map
- * where each character is stored along with the number of times it appears.
+ * The algorithm first iterates through the first string `s`
+ * and increments the count corresponding to each character.
  *
- * Next, the algorithm iterates through the second string and for each character:
- * - Verifies that the character exists in the map
- * - Ensures its frequency is greater than zero
- * - Decrements the frequency to mark usage
+ * It then iterates through the second string `t`
+ * and decrements the count for each character encountered.
  *
- * If at any point a character is missing or overused, the strings
- * cannot be anagrams and the function returns false.
+ * If the two strings are true anagrams, all character counts
+ * will balance out and result in zero.
  *
- * If all characters are processed successfully, the strings are anagrams
- * and the function returns true.
+ * Finally, the frequency array is checked to ensure that
+ * no character count is negative, which would indicate
+ * a mismatch in character occurrences.
+ *
+ * An early length check is performed to quickly eliminate
+ * strings that cannot be anagrams.
  *
  * Time Complexity:
- * - O(n), where n is the length of the string
+ * - O(n), where n is the length of the strings.
  *
  * Space Complexity:
- * - O(1) for fixed character sets (or O(n) in the worst case for large alphabets)
+ * - O(1), because a fixed-size array of 26 elements is used.
  */
 
 class Solution {
     public boolean isAnagram(String s, String t) {
         if (s.length() != t.length()) return false;
 
-        Map<Character, Integer> charMap = new HashMap<>();
+        int[] chars = new int[26];
         for (char ch : s.toCharArray()) {
-            charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
+            chars[ch-'a'] = chars[ch-'a'] + 1;
         }
 
         for (char ch: t.toCharArray()) {
-            if (!charMap.containsKey(ch) || charMap.get(ch) <= 0) {
-                return false;
-            }
-            charMap.put(ch, charMap.get(ch) - 1);
+            chars[ch-'a'] = chars[ch-'a'] - 1;
         }
-
+        for (int i = 0; i< 26; i++) {
+            if (chars[i] != 0) return false;
+        }
         return true;
     }
 }
