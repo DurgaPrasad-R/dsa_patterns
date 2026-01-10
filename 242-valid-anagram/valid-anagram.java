@@ -1,48 +1,44 @@
 /**
- * This solution checks whether two strings are anagrams
- * by comparing their sorted character sequences.
+ * Character Frequency Approach:
  *
- * An anagram requires both strings to:
- * - Have the same length
- * - Contain the same characters with the same frequencies
+ * The algorithm first validates that both strings have the same length,
+ * since anagrams must contain the same number of characters.
  *
- * The algorithm first checks if the lengths of the two strings
- * are equal. If not, they cannot be anagrams and the method
- * immediately returns false.
+ * It then iterates through the first string and builds a frequency map
+ * where each character is stored along with the number of times it appears.
  *
- * Both strings are then converted into character arrays.
- * These arrays are sorted so that identical characters
- * appear in the same order.
+ * Next, the algorithm iterates through the second string and for each character:
+ * - Verifies that the character exists in the map
+ * - Ensures its frequency is greater than zero
+ * - Decrements the frequency to mark usage
  *
- * After sorting, the algorithm compares the characters
- * at each index of both arrays.
- * - If any pair of characters differs, the strings are
- *   not anagrams.
- * - If all characters match, the strings are anagrams.
+ * If at any point a character is missing or overused, the strings
+ * cannot be anagrams and the function returns false.
+ *
+ * If all characters are processed successfully, the strings are anagrams
+ * and the function returns true.
  *
  * Time Complexity:
- * - O(n log n), where n is the length of the strings,
- *   due to sorting both character arrays.
+ * - O(n), where n is the length of the string
  *
  * Space Complexity:
- * - O(n), since additional character arrays are created.
+ * - O(1) for fixed character sets (or O(n) in the worst case for large alphabets)
  */
- 
+
 class Solution {
     public boolean isAnagram(String s, String t) {
         if (s.length() != t.length()) return false;
 
-        int n = s.length();
-        char[] sChars = s.toCharArray();
-        char[] tChars = t.toCharArray();
+        Map<Character, Integer> charMap = new HashMap<>();
+        for (char ch : s.toCharArray()) {
+            charMap.put(ch, charMap.getOrDefault(ch, 0) + 1);
+        }
 
-        Arrays.sort(sChars);
-        Arrays.sort(tChars);
-
-        for(int i = 0; i < n; i++) {
-            if (sChars[i] != tChars[i]) {
+        for (char ch: t.toCharArray()) {
+            if (!charMap.containsKey(ch) || charMap.get(ch) <= 0) {
                 return false;
             }
+            charMap.put(ch, charMap.get(ch) - 1);
         }
 
         return true;
