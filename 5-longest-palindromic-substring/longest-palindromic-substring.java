@@ -1,27 +1,36 @@
 class Solution {
-    public static int expandAroundCenter(String s, int l, int r) {
-        while (l >=0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
-            l -= 1;
-            r += 1;
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        if (n == 0) return s;
+
+        int maxLen = 1, start = 0;
+        boolean[][] dp = new boolean[n][n];
+        
+        // single characters are always palindromes
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
         }
 
-        return r - l - 1;
-    }
+        // we'll check max. length of all palindromes with same length at once
+        for (int len = 2; len <= n; len++) {
 
-    public String longestPalindrome(String s) {
-        int start = 0, end = 0;
+            for (int i = 0; i + len - 1 < n; i++) {
+                // j is the end of new substring
+                int j = i + len - 1;
 
-        for (int i = 0; i < s.length(); i++) {
-            int odd = expandAroundCenter(s, i, i);
-            int even = expandAroundCenter(s, i, i + 1);
-            int len = Math.max(odd, even);
+                if (s.charAt(i) == s.charAt(j)) {
+                    // len of substring <= 3; it is always a palindrome
+                    if (len <= 3 || dp[i+1][j-1]) {
+                        dp[i][j] = true;
 
-            if (len > end - start) {
-                start = i - (len - 1)/ 2;
-                end = i + len / 2;
+                        if (len > maxLen) {
+                            maxLen = len;
+                            start = i;
+                        }
+                    }
+                }
             }
         }
-
-        return s.substring(start, end + 1);
+        return s.substring(start, start + maxLen);
     }
 }
