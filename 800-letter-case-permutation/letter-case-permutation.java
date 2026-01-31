@@ -11,18 +11,13 @@ class Solution {
             return;
         }
 
-        if (s.charAt(i) >= 'a' && s.charAt(i) <= 'z') {
-            backtrack(s, i + 1, temp + s.charAt(i), result);
-            backtrack(s, i + 1, temp + (char)(s.charAt(i) - 32), result);
-        }
-
-        else if (s.charAt(i) >= 'A' && s.charAt(i) <= 'Z') {
-            backtrack(s, i + 1, temp + s.charAt(i), result);
-            backtrack(s, i + 1, temp + (char)(s.charAt(i) + 32), result);
-        }
-
-        else {
-            backtrack(s, i + 1, temp + s.charAt(i), result);
+        char ch = s.charAt(i);
+        
+        if (Character.isDigit(ch)) {
+            backtrack(s, i + 1, temp + ch , result);
+        } else {
+            backtrack(s, i + 1, temp + Character.toLowerCase(ch), result);
+            backtrack(s, i + 1, temp + Character.toUpperCase(ch), result);
         }
     }
 }
